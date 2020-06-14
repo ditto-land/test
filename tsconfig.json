@@ -16,7 +16,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@henryqrm/test1": ["libs/test1/src/index.ts"]
+      "@henryqrm/test1": ["libs/test1/src/index.ts"],
+      "@henryqrm/test2": ["libs/test2/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
