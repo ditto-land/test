@@ -1,0 +1,82 @@
+name: Merge on master & Publish
+
+on:
+  push:
+    paths: 'libs/**'
+    branches: [master, next]
+  pull_request:
+    # build only change libs folder
+    paths: 'libs/**'
+    branches:
+      - master
+    types: [closed]
+
+jobs:
+  release:
+    name: release
+    # ignore when ci do commit
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    runs-on: ubuntu-latest
+
+    outputs:
+      nx_build_libs: ${{ steps.build.outputs.nx_build_libs }}
+      nx_affected_libs: ${{ steps.affected.outputs.nx_affected_libs }}
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      # Checkout code
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          ref: master
+
+      - name: Cache yarn
+        uses: actions/cache@master
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Cache node_modules
+        uses: actions/cache@master
+        with:
+          path: ${{ github.workspace }}/node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Setup Node.js ${{ matrix.node-version }} with GitHub Package Registry
+        uses: actions/setup-node@master
+        with:
+          node-version: ${{ matrix.node-version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@henryqrm'
+          always-auth: true
+
+      - name: Affected libs
+        id: affected
+        run: |
+          git fetch --no-tags --prune --depth=5 origin master
+          node ./tools/scripts/affected.js  --base=${{ github.base_ref }} --head=${{ github.head_ref }}
+
+      - name: Build
+        id: build
+        run: node ./tools/scripts/build.js --projects=${{ steps.affected.outputs.nx_affected_libs }}
+
+      - name: Run Semantic Release
+        if: steps.build.outputs.nx_build_libs == 'success'
+        run: yarn semantic-release
+
+      - name: Publish To GitHub Package Registry
+        if: steps.build.outputs.nx_build_libs == 'success'
+        run: node ./tools/scripts/publish.js --root=${{ github.workspace }} --projects=${{ steps.affected.outputs.nx_affected_libs }}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
