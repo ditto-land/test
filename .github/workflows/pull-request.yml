@@ -44,7 +44,7 @@ jobs:
             ${{ runner.os }}-node_modules-
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn
 
       - name: Setup Node.js ${{ matrix.node-version }} with GitHub Package Registry
         uses: actions/setup-node@master
