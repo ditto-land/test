@@ -53,14 +53,15 @@ jobs:
         run: |
           if [[ $GITHUB_BASE_REF ]]
           then
-            export NX_BASE=remotes/origin/$GITHUB_BASE_REF
+            export NX_BASE=origin/$GITHUB_BASE_REF
           else
             export NX_BASE=$(git rev-parse HEAD~1)
           fi
-          node ./tools/scripts/affected.js  --base=$NX_BASE --head=$GITHUB_HEAD_REF
+          git fetch --no-tags --prune --depth=5 origin ${{ github.sha }}
+          node ./tools/scripts/affected.js  --base=$NX_BASE --head=origin/$GITHUB_HEAD_REF
 
       - name: Linter
-        run: yarn affected:lint --base=${{ github.base_ref }} --head=${{ github.head_ref }}
+        run: yarn affected:lint --base=origin/${{ github.base_ref }} --head=origin/${{ github.head_ref }}
 
       - name: Test
         run: yarn affected:test --base=${{ github.base_ref }} --head=${{ github.head_ref }}
