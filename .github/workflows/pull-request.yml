@@ -46,7 +46,7 @@ jobs:
         run: yarn nx run-many --target=build --configuration=production --all
 
   lint:
-    name: Lint all code
+    name: Linter
     runs-on: ubuntu-latest
     needs: [dependencies]
     steps:
@@ -63,7 +63,7 @@ jobs:
             ${{ runner.os }}-yarn-
       - name: Run linting
         continue-on-error: true # temporary measurements until linting errors are fixed, see https://github.com/datorama/akita/issues/401
-        run: yarn nx run-many --target=lint --all
+        run: yarn affected:lint -- --base="origin/master"
 
   test:
     name: Test applications & libraries
