@@ -82,10 +82,10 @@ jobs:
 
       - name: Linter
         shell: bash
-        run: yarn affected:lint -- --base="origin/master"
+        run: yarn affected:lint --base $GITHUB_REF --head $GITHUB_SHA
 
       - name: Test
-        run: yarn affected:test --base=${{ github.base_ref }} --head=${{ github.head_ref }}
+        run: yarn affected:test --base=remotes/origin/${{ github.base_ref }} --head=remotes/origin/${{ github.head_ref }}
 
       - name: E2e
         run: yarn affected:e2e --base=${{ github.base_ref }} --head=${{ github.head_ref }}
