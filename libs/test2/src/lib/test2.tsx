@@ -8,7 +8,8 @@ export interface Test2Props {}
 export const Test2 = (props: Test2Props) => {
   return (
     <div>
-      <h1>Welcome to test2!</h1>
+      <div>asd</div>
+      <h1>Welcome!</h1>
     </div>
   );
 };
