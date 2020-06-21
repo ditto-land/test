@@ -69,7 +69,8 @@ jobs:
           git fetch --no-tags --prune --depth=5 origin ${{ github.sha }}
           node ./tools/scripts/affected.js  --base=$NX_BASE --head=$NX_HEAD
 
-      - name: Lintershell: bash
+      - name: Linter
+        shell: bash
         run: |
           if [[ $GITHUB_BASE_REF ]]
           then
