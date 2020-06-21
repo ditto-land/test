@@ -40,7 +40,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install dependencies
-        run: yarn
+        run: yarn --frozen-lockfile
 
       - name: Setup Node.js ${{ matrix.node-version }} with GitHub Package Registry
         uses: actions/setup-node@master
@@ -53,15 +53,33 @@ jobs:
         run: |
           if [[ $GITHUB_BASE_REF ]]
           then
-            export NX_BASE=origin/$GITHUB_BASE_REF
+            export NX_BASE=$(git rev-parse origin/$GITHUB_BASE_REF)
           else
             export NX_BASE=$(git rev-parse HEAD~1)
           fi
-          git fetch --no-tags --prune --depth=5 origin ${{ github.sha }}
-          node ./tools/scripts/affected.js  --base=$NX_BASE --head=origin/$GITHUB_HEAD_REF
+          if [[ $GITHUB_HEAD_REF ]]
+          then
+            export NX_HEAD=$(git rev-parse origin/$GITHUB_HEAD_REF)
+          else
+            export NX_HEAD=$(git rev-parse HEAD~1)
+          fi
+          echo $NX_BASE
+          echo $NX_HEAD
 
-      - name: Linter
-        run: yarn affected:lint --base=origin/${{ github.base_ref }} --head=origin/${{ github.head_ref }}
+          git fetch --no-tags --prune --depth=5 origin ${{ github.sha }}
+          node ./tools/scripts/affected.js  --base=$NX_BASE --head=$NX_HEAD
+
+      - name: Lintershell: bash
+        run: |
+          if [[ $GITHUB_BASE_REF ]]
+          then
+            export NX_BASE=remotes/origin/$GITHUB_BASE_REF
+          else
+            export NX_BASE=$(git rev-parse HEAD~1)
+          fi
+          echo "Base => $NX_BASE"
+          yarn format:check -- --base=$NX_BASE
+          yarn affected:lint -- --base=$NX_BASE
 
       - name: Test
         run: yarn affected:test --base=${{ github.base_ref }} --head=${{ github.head_ref }}
