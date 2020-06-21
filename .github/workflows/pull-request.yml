@@ -72,17 +72,17 @@ jobs:
           then
             export NX_HEAD=$(git rev-parse origin/${{ github.head_ref }})
           else
-            export NX_HEAD=$(git rev-parse HEAD~1)
+            export NX_HEAD=$(git rev-parse HEAD)
           fi
           echo base: $NX_BASE
           echo head: $NX_HEAD
 
           git fetch --no-tags --prune --depth=5 origin ${{ github.sha }}
-          node ./tools/scripts/affected.js  --base=$NX_BASE --head=$NX_HEAD
+          node ./tools/scripts/affected.js --base=$NX_BASE --head=$NX_HEAD
 
       - name: Linter
         shell: bash
-        run: yarn affected:lint -- --base=$(git rev-parse origin/${{ github.base_ref }}) --head=$(git rev-parse origin/${{ github.head_ref }})
+        run: yarn affected:lint -- --base="origin/master"
 
       - name: Test
         run: yarn affected:test --base=${{ github.base_ref }} --head=${{ github.head_ref }}
