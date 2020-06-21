@@ -22,6 +22,7 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
+
       - name: Yarn Install
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install
@@ -51,7 +52,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Run builders
-        run: yarn affected:build --base=origin/master --head=${{ github.event.pull_request.head.ref }}
+        run: yarn affected:build --base=origin/master --head=${{ github.event.pull_request.head.ref }} --prod --with-deps
 
   lint:
     name: Linter
@@ -68,6 +69,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
+
       - name: Restore dependencies from cache
         uses: actions/cache@v1
         with:
@@ -75,6 +77,7 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
+
       - name: Run linting
         run: yarn affected:lint --base=origin/master --head=${{ github.event.pull_request.head.ref }}
 
@@ -93,6 +96,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
+
       - name: Restore dependencies from cache
         uses: actions/cache@v1
         with:
@@ -100,5 +104,6 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
+
       - name: Run tests
         run: yarn affected:test --base=origin/master --head=${{ github.event.pull_request.head.ref }}
