@@ -51,6 +51,12 @@ jobs:
     needs: [dependencies]
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - run: git fetch --no-tags --prune --depth=5 origin master
+
       - uses: actions/setup-node@v1
         with:
           node-version: 12
@@ -62,8 +68,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - name: Run linting
-        continue-on-error: true # temporary measurements until linting errors are fixed, see https://github.com/datorama/akita/issues/401
-        run: yarn nx run-many --target=lint --all
+        run: yarn affected:libs --base=origin/master --head=${{ github.event.pull_request.head.ref }}
 
   test:
     name: Test applications & libraries
