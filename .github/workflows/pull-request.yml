@@ -27,21 +27,17 @@ jobs:
         with:
           ref: master
 
-      - name: Cache yarn
-        uses: actions/cache@master
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
-          path: ~/.cache/yarn
-          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-
-      - name: Cache node_modules
-        uses: actions/cache@master
-        with:
-          path: ${{ github.workspace }}/node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node_modules-
 
       - name: Install dependencies
         run: yarn
@@ -52,10 +48,16 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Affected libs
+        shell: bash
         id: affected
         run: |
-          git fetch --no-tags --prune --depth=5 origin ${{ github.sha }}
-          node ./tools/scripts/affected.js  --base=${{ github.base_ref }} --head=${{ github.head_ref }}
+          if [[ $GITHUB_BASE_REF ]]
+          then
+            export NX_BASE=remotes/origin/$GITHUB_BASE_REF
+          else
+            export NX_BASE=$(git rev-parse HEAD~1)
+          fi
+          node ./tools/scripts/affected.js  --base=$NX_BASE --head=$GITHUB_HEAD_REF
 
       - name: Linter
         run: yarn affected:lint --base=${{ github.base_ref }} --head=${{ github.head_ref }}
