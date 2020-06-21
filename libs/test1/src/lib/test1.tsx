@@ -8,7 +8,7 @@ export interface Test1Props {}
 export const Test1 = (props: Test1Props) => {
   return (
     <div>
-      <h1>Welcome to test1!</h1>
+      <h1>Welcome to asdasd!</h1>
     </div>
   );
 };

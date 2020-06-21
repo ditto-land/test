@@ -2,71 +2,84 @@ name: PR on master
 
 on:
   pull_request:
-    paths: 'libs/**'
     branches:
       - master
     types: [opened, reopened, synchronize]
 
 jobs:
-  verify:
-    name: Pull request
+  dependencies:
+    name: Cache dependencies
     runs-on: ubuntu-latest
-
-    outputs:
-      nx_build_libs: ${{ steps.build.outputs.nx_build_libs }}
-      nx_affected_libs: ${{ steps.affected.outputs.nx_affected_libs }}
-
-    strategy:
-      matrix:
-        node-version: [12.x]
-
     steps:
-      # Checkout code
-      - name: Checkout
-        uses: actions/checkout@master
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
         with:
-          ref: master
-
-      - name: Cache yarn
-        uses: actions/cache@master
+          node-version: 12
+      - uses: actions/cache@v1
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
-          path: ~/.cache/yarn
-          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          path: node_modules # !WARN does not work if running multiple node versions, instead use https://github.com/actions/cache/blob/master/examples.md#node---yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
+      - name: Yarn Install
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install
 
-      - name: Cache node_modules
-        uses: actions/cache@master
+  build:
+    name: Build applications & libraries
+    runs-on: ubuntu-latest
+    needs: [dependencies]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
         with:
-          path: ${{ github.workspace }}/node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock') }}
+          node-version: 12
+      - name: Restore dependencies from cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-node_modules-
+            ${{ runner.os }}-yarn-
+      - name: Run builders
+        run: yarn nx run-many --target=build --configuration=production --all
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Setup Node.js ${{ matrix.node-version }} with GitHub Package Registry
-        uses: actions/setup-node@master
+  lint:
+    name: Linter
+    runs-on: ubuntu-latest
+    needs: [dependencies]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 12
+      - name: Restore dependencies from cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Run linting
+        continue-on-error: true # temporary measurements until linting errors are fixed, see https://github.com/datorama/akita/issues/401
+        run: yarn nx run-many --target=lint --all
 
-      - name: Affected libs
-        id: affected
-        run: |
-          git fetch --no-tags --prune --depth=5 origin master
-          node ./tools/scripts/affected.js  --base=${{ github.base_ref }} --head=${{ github.head_ref }}
-
-      - name: Linter
-        run: yarn affected:lint --base=${{ github.base_ref }} --head=${{ github.head_ref }}
-
-      - name: Test
-        run: yarn affected:test --base=${{ github.base_ref }} --head=${{ github.head_ref }}
-
-      - name: E2e
-        run: yarn affected:e2e --base=${{ github.base_ref }} --head=${{ github.head_ref }}
-
-
-
-
-
+  test:
+    name: Test applications & libraries
+    runs-on: ubuntu-latest
+    needs: [dependencies]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Restore dependencies from cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Run tests
+        run: yarn nx run-many --target=test --all
