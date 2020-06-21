@@ -14,6 +14,10 @@ const main = () => {
       head = 'origin/master~1';
     }
 
+    console.log('base: ', base);
+    console.log('head: ', head);
+    
+
     const stdio = execSync(
       `npx nx affected:libs --base=${base} --head=${head}`
     );

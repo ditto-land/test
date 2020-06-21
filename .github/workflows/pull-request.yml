@@ -54,7 +54,7 @@ jobs:
       - name: Affected libs
         id: affected
         run: |
-          git fetch --no-tags --prune --depth=5 origin master
+          git fetch --no-tags --prune --depth=5 origin ${{ github.sha }}
           node ./tools/scripts/affected.js  --base=${{ github.base_ref }} --head=${{ github.head_ref }}
 
       - name: Linter
