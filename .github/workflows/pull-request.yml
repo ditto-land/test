@@ -62,36 +62,27 @@ jobs:
         shell: bash
         id: affected
         run: |
-          if [[ $GITHUB_BASE_REF ]]
+          if [[ ${{ github.base_ref }} ]]
           then
-            export NX_BASE=$(git rev-parse origin/$GITHUB_BASE_REF)
+            export NX_BASE=$(git rev-parse origin/${{ github.base_ref }})
           else
             export NX_BASE=$(git rev-parse HEAD~1)
           fi
-          if [[ $GITHUB_HEAD_REF ]]
+          if [[ ${{ github.head_ref }} ]]
           then
-            export NX_HEAD=$(git rev-parse origin/$GITHUB_HEAD_REF)
+            export NX_HEAD=$(git rev-parse origin/${{ github.head_ref }})
           else
             export NX_HEAD=$(git rev-parse HEAD~1)
           fi
-          echo $NX_BASE
-          echo $NX_HEAD
+          echo base: $NX_BASE
+          echo head: $NX_HEAD
 
           git fetch --no-tags --prune --depth=5 origin ${{ github.sha }}
           node ./tools/scripts/affected.js  --base=$NX_BASE --head=$NX_HEAD
 
       - name: Linter
         shell: bash
-        run: |
-          if [[ $GITHUB_BASE_REF ]]
-          then
-            export NX_BASE=remotes/origin/$GITHUB_BASE_REF
-          else
-            export NX_BASE=$(git rev-parse HEAD~1)
-          fi
-          echo "Base => $NX_BASE"
-          yarn format:check -- --base=$NX_BASE
-          yarn affected:lint -- --base=$NX_BASE
+        run: yarn affected:lint -- --base=$(git rev-parse origin/${{ github.base_ref }}) --head=$(git rev-parse origin/${{ github.head_ref }})
 
       - name: Test
         run: yarn affected:test --base=${{ github.base_ref }} --head=${{ github.head_ref }}
