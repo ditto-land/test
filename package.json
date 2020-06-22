@@ -76,6 +76,7 @@
     "ts-jest": "25.2.1",
     "ts-node": "~7.0.0",
     "tslint": "~6.0.0",
+    "@commitlint/config-conventional": "^8.3.4",
     "typescript": "~3.8.3"
   }
 }
