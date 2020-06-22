@@ -10,5 +10,7 @@ export const Test1 = (props: Test1Props) => (
     <div>asdasds</div>
   </div>
 );
+console.log('asdasd');
+
 
 export default Test1;
