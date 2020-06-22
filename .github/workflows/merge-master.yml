@@ -1,9 +1,9 @@
 name: Merge on master & Publish
 
 on:
-  # push:
+  push:
     # paths: 'libs/**'
-    # branches: [master, next]
+    branches: [master, next]
   pull_request:
     # build only change libs folder
     # paths: 'libs/**'
