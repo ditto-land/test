@@ -4,12 +4,12 @@ on:
   push:
     # paths: 'libs/**'
     branches: [master, next]
-  pull_request:
+  # pull_request:
     # build only change libs folder
     # paths: 'libs/**'
-    branches:
-      - master
-    types: [closed]
+    # branches:
+    #   - master
+    # types: [closed]
 
 jobs:
   dependencies:
@@ -39,8 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 0
+          ref: master
 
       - run: git fetch --no-tags --prune --depth=5 origin master
 
@@ -57,7 +56,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Run builders
-        run: yarn affected:build --base=origin/master --head=${{ github.event.pull_request.head.ref }} --prod --with-deps
+        run: yarn affected:build --base=origin/master~1 --prod --with-deps
 
   lint:
     name: Linter
@@ -66,8 +65,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 0
+          ref: master
 
       - run: git fetch --no-tags --prune --depth=5 origin master
 
@@ -84,7 +82,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Run linting
-        run: yarn affected:lint --base=origin/master --head=${{ github.event.pull_request.head.ref }}
+        run: yarn affected:lint --base=origin/master~1
 
   test:
     name: Test applications & libraries
@@ -93,8 +91,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 0
+          ref: master
 
       - run: git fetch --no-tags --prune --depth=5 origin master
 
@@ -111,7 +108,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Run tests
-        run: yarn affected:test --base=origin/master --head=${{ github.event.pull_request.head.ref }}
+        run: yarn affected:test --base=origin/master~1
 
   publish:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
@@ -121,8 +118,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 0
+          ref: master
 
       - run: git fetch --no-tags --prune --depth=5 origin master
 
@@ -153,7 +149,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
-          export AFFECTED=$(node node_modules/.bin/nx affected:libs --plain --base=origin/master --head=${{ github.event.pull_request.head.ref }})
+          export AFFECTED=$(node node_modules/.bin/nx affected:libs --plain --base=origin/master~1)
           export ROOT_DIR="$PWD"
           if [[ "$AFFECTED" != "" ]]; then
             while IFS= read -r -d $' ' lib; do
