@@ -1,3 +1,15 @@
+## @henryqrm/test1 [1.2.0](https://github.com/ditto-land/test/compare/@henryqrm/test1@1.1.0...@henryqrm/test1@1.2.0) (2020-06-22)
+
+
+### Features
+
+* feat ([d346a95](https://github.com/ditto-land/test/commit/d346a95ba68a2a32d16bf4b5318d93f0cfe84b75))
+
+
+### Bug Fixes
+
+* erro ([52440c2](https://github.com/ditto-land/test/commit/52440c2c361f42a9a838ee078a4ca3106fb5a391))
+
 ## @henryqrm/test1 [1.1.0](https://github.com/ditto-land/test/compare/@henryqrm/test1@1.0.0...@henryqrm/test1@1.1.0) (2020-06-22)
 
 
