@@ -1,3 +1,10 @@
+## @henryqrm/test1 [1.1.0](https://github.com/ditto-land/test/compare/@henryqrm/test1@1.0.0...@henryqrm/test1@1.1.0) (2020-06-22)
+
+
+### Features
+
+* add config asd ([e16a2de](https://github.com/ditto-land/test/commit/e16a2de211b15058587df8c1d94b4820e9097028))
+
 ## @henryqrm/test1 1.0.0 (2020-06-22)
 
 
