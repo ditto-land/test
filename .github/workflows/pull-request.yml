@@ -22,6 +22,7 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
+
       - name: Yarn Install
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install
@@ -32,9 +33,16 @@ jobs:
     needs: [dependencies]
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - run: git fetch --no-tags --prune --depth=5 origin master
+
       - uses: actions/setup-node@v1
         with:
           node-version: 12
+
       - name: Restore dependencies from cache
         uses: actions/cache@v1
         with:
@@ -42,8 +50,9 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
+
       - name: Run builders
-        run: yarn nx run-many --target=build --configuration=production --all
+        run: yarn affected:build --base=origin/master --head=${{ github.event.pull_request.head.ref }} --prod --with-deps
 
   lint:
     name: Linter
@@ -51,9 +60,16 @@ jobs:
     needs: [dependencies]
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - run: git fetch --no-tags --prune --depth=5 origin master
+
       - uses: actions/setup-node@v1
         with:
           node-version: 12
+
       - name: Restore dependencies from cache
         uses: actions/cache@v1
         with:
@@ -61,9 +77,9 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
+
       - name: Run linting
-        continue-on-error: true # temporary measurements until linting errors are fixed, see https://github.com/datorama/akita/issues/401
-        run: yarn nx run-many --target=lint --all
+        run: yarn affected:lint --base=origin/master --head=${{ github.event.pull_request.head.ref }}
 
   test:
     name: Test applications & libraries
@@ -71,9 +87,16 @@ jobs:
     needs: [dependencies]
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - run: git fetch --no-tags --prune --depth=5 origin master
+
       - uses: actions/setup-node@v1
         with:
           node-version: 12
+
       - name: Restore dependencies from cache
         uses: actions/cache@v1
         with:
@@ -81,5 +104,58 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
+
       - name: Run tests
-        run: yarn nx run-many --target=test --all
+        run: yarn affected:test --base=origin/master --head=${{ github.event.pull_request.head.ref }}
+
+  # publish:
+  #   if: "!contains(github.event.head_commit.message, 'skip ci')"
+  #   name: Publish
+  #   runs-on: ubuntu-latest
+  #   needs: [test, lint, build]
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         ref: ${{ github.event.pull_request.head.ref }}
+  #         fetch-depth: 0
+
+  #     - run: git fetch --no-tags --prune --depth=5 origin master
+
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 12
+  #         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+  #         registry-url: 'https://npm.pkg.github.com'
+  #         scope: 'henryqrm'
+  #         always-auth: true
+
+  #     - name: Restore dependencies from cache
+  #       uses: actions/cache@v1
+  #       with:
+  #         path: node_modules
+  #         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-yarn-
+
+  #     - name: Run Semantic Release
+  #       run: yarn semantic-release
+
+  #     - name: Deploy
+  #       shell: bash
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{ secrets.GH_TOKEN }}
+  #       run: |
+  #         npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
+  #         export AFFECTED=$(node node_modules/.bin/nx affected:libs --plain --base=origin/master --head=${{ github.event.pull_request.head.ref }})
+  #         export ROOT_DIR="$PWD"
+  #         if [[ "$AFFECTED" != "" ]]; then
+  #           while IFS= read -r -d $' ' lib; do
+
+  #             npm publish "$ROOT_DIR/dist/libs/${lib/-//}" --@henryqrm:registry='https://npm.pkg.github.com' --access=public
+
+  #             wait
+  #           done <<<"$AFFECTED "
+  #         else
+  #           echo "No Libraries to publish"
+  #         fi
+      
