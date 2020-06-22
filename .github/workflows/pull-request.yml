@@ -129,6 +129,14 @@ jobs:
           scope: 'henryqrm'
           always-auth: true
 
+      - name: Restore dependencies from cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
       - name: Run Semantic Release
         run: yarn semantic-release
 
