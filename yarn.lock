@@ -1191,6 +1191,26 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
+"@henryqrm/nx-semantic-release@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@henryqrm/nx-semantic-release/-/nx-semantic-release-1.0.1.tgz#92a3f83e9fe114ee8d46a79857f2c18c4e2c9e7a"
+  integrity sha512-VWGSXCdxwG22Bkv8BN921KfZgXHG0VERBWmsCQC4lPpbEDhyyLsqG5rKkoVOOvpw+gtchqR4Nt4ssj32iOg9Yg==
+  dependencies:
+    bash-glob "^2.0.0"
+    blork "^9.2.2"
+    cosmiconfig "^6.0.0"
+    execa "^4.0.2"
+    get-stream "^5.1.0"
+    git-log-parser "^1.2.0"
+    lodash "^4.17.15"
+    meow "^7.0.1"
+    promise-events "^0.1.8"
+    semantic-release "^17.0.8"
+    semver "^7.3.2"
+    signale "^1.4.0"
+    stream-buffers "^3.0.2"
+    tempy "^0.5.0"
+
 "@iarna/cli@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@iarna/cli/-/cli-1.2.0.tgz#0f7af5e851afe895104583c4ca07377a8094d641"
@@ -1755,26 +1775,6 @@
   integrity sha512-GorvORVwp244fGKEt3cgt/P+M0MGy4xEDbckw+K5ojEezxyMDgCaYPKVct+/eWQfZXOT7uq0xRpmrl/+hliabA==
   dependencies:
     "@types/node" ">= 8"
-
-"@qiwi/multi-semantic-release@^3.0.1":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@qiwi/multi-semantic-release/-/multi-semantic-release-3.0.2.tgz#20219a061c140729a1a2e6f969c28b1084ede575"
-  integrity sha512-juDDiG7wExHBuRRiSrUIlZTePhGZAq08ovEIwo96aJ2/+NZItvevMLDlT8aa3rxhK/42mHdMd1mlKo+FjmlbDQ==
-  dependencies:
-    bash-glob "^2.0.0"
-    blork "^9.2.2"
-    cosmiconfig "^6.0.0"
-    execa "^4.0.2"
-    get-stream "^5.1.0"
-    git-log-parser "^1.2.0"
-    lodash "^4.17.15"
-    meow "^7.0.1"
-    promise-events "^0.1.8"
-    semantic-release "^17.0.8"
-    semver "^7.3.2"
-    signale "^1.4.0"
-    stream-buffers "^3.0.2"
-    tempy "^0.5.0"
 
 "@rollup/plugin-babel@5.0.2":
   version "5.0.2"
