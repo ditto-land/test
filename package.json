@@ -1,8 +1,4 @@
 {
-  "workspaces": [
-    "libs/test1",
-    "libs/test2"
-  ],
   "name": "henryqrm",
   "version": "0.0.0",
   "license": "MIT",
@@ -28,7 +24,7 @@
     "workspace-schematic": "nx workspace-schematic",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
-    "semantic-release": "multi-semantic-release"
+    "semantic-release": "nx-semantic-release"
   },
   "private": true,
   "dependencies": {
@@ -41,13 +37,14 @@
     "@babel/preset-env": "7.9.6",
     "@babel/preset-react": "7.9.4",
     "@babel/preset-typescript": "7.9.0",
+    "@commitlint/config-conventional": "^8.3.4",
+    "@henryqrm/nx-semantic-release": "^1.0.1",
     "@nrwl/cypress": "9.4.5",
     "@nrwl/eslint-plugin-nx": "9.4.5",
     "@nrwl/jest": "9.4.5",
     "@nrwl/react": "9.4.5",
     "@nrwl/web": "9.4.5",
     "@nrwl/workspace": "9.4.5",
-    "@qiwi/multi-semantic-release": "^3.0.1",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/commit-analyzer": "^8.0.1",
     "@semantic-release/git": "^9.0.0",
@@ -76,7 +73,6 @@
     "ts-jest": "25.2.1",
     "ts-node": "~7.0.0",
     "tslint": "~6.0.0",
-    "@commitlint/config-conventional": "^8.3.4",
     "typescript": "~3.8.3"
   }
 }
