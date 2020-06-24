@@ -1,3 +1,10 @@
+## @henryqrm/test1 [1.3.0](https://github.com/ditto-land/test/compare/@henryqrm/test1@1.2.0...@henryqrm/test1@1.3.0) (2020-06-24)
+
+
+### Features
+
+* add new feature ([d59ce02](https://github.com/ditto-land/test/commit/d59ce029c50f325a727eacd8623891a757c71240))
+
 ## @henryqrm/test1 [1.2.0](https://github.com/ditto-land/test/compare/@henryqrm/test1@1.1.0...@henryqrm/test1@1.2.0) (2020-06-22)
 
 
