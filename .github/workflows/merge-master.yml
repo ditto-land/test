@@ -5,11 +5,11 @@ on:
     # paths: 'libs/**'
     branches: [master, next]
   # pull_request:
-    # build only change libs folder
-    # paths: 'libs/**'
-    # branches:
-    #   - master
-    # types: [closed]
+  # build only change libs folder
+  # paths: 'libs/**'
+  # branches:
+  #   - master
+  # types: [closed]
 
 jobs:
   dependencies:
@@ -96,12 +96,12 @@ jobs:
 
       - run: git fetch --no-tags --prune --depth=5 origin master
 
-      - uses: actions/setup-node@v1
+      - name: Setup Node.js with Npm Package Registry
+        uses: actions/setup-node@v1
         with:
           node-version: 12
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          registry-url: 'https://npm.pkg.github.com'
-          scope: 'henryqrm'
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          registry-url: 'https://registry.npmjs.org'
           always-auth: true
 
       - name: Restore dependencies from cache
@@ -117,21 +117,45 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
-      - name: Run builders
+      - name: Run builders Affected
         run: yarn affected:build --base=origin/master~1 --prod --with-deps
 
       - name: Deploy
         shell: bash
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
           export AFFECTED=$(node node_modules/.bin/nx affected:libs --plain --base=origin/master~1)
           export ROOT_DIR="$PWD"
           if [[ "$AFFECTED" != "" ]]; then
             while IFS= read -r -d $' ' lib; do
 
-              npm publish "$ROOT_DIR/dist/libs/${lib/-//}" --@henryqrm:registry='https://npm.pkg.github.com' --access=public
+              npm publish "$ROOT_DIR/dist/libs/${lib/-//}" --access=public
+
+              wait
+            done <<<"$AFFECTED "
+          else
+            echo "No Libraries to publish"
+          fi
+
+      - name: Setup Node.js with GitHub Package Registry
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          registry-url: 'https://npm.pkg.github.com'
+          scope: 'henryqrm'
+
+      - name: Publish To GitHub Package Registry
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          export AFFECTED=$(node node_modules/.bin/nx affected:libs --plain --base=origin/master~1)
+          export ROOT_DIR="$PWD"
+          if [[ "$AFFECTED" != "" ]]; then
+            while IFS= read -r -d $' ' lib; do
+
+              npm publish "$ROOT_DIR/dist/libs/${lib/-//}"
 
               wait
             done <<<"$AFFECTED "
