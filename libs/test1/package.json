@@ -1,1 +1,18 @@
-{"name":"@henryqrm/test1","version":"0.0.1","author":{"name":"henryqrm","email":"henryqrm@gmail.com"},"publishConfig":{"access":"public"},"dependencies":{},"devDependencies":{},"peerDependencies":{},"optionalDependencies":{}}
+{
+  "name": "@henryqrm/test1",
+  "version": "0.0.1",
+  "author": {
+    "name": "henryqrm",
+    "email": "henryqrm@gmail.com"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "postpublish": "cp -r dist/package.json . && cp -r dist/npm-shrinkwrap.json ."
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "peerDependencies": {},
+  "optionalDependencies": {}
+}
