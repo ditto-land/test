@@ -1,3 +1,10 @@
+### @henryqrm/test1 [1.6.1](https://github.com/ditto-land/test/compare/@henryqrm/test1@1.6.0...@henryqrm/test1@1.6.1) (2020-06-25)
+
+
+### Bug Fixes
+
+* xxx x xxx  xxxxx xxxx ([1e1759f](https://github.com/ditto-land/test/commit/1e1759f4f9c776b373ad64b7d2a618880a8e8c2d))
+
 ## @henryqrm/test1 [1.6.0](https://github.com/ditto-land/test/compare/@henryqrm/test1@1.5.0...@henryqrm/test1@1.6.0) (2020-06-25)
 
 
