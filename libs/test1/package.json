@@ -1,11 +1,1 @@
-{
-  "name": "@henryqrm/test1",
-  "version": "0.0.1",
-  "author": {
-    "name": "henryqrm",
-    "email": "henryqrm@gmail.com"
-  },
-  "publishConfig": {
-    "access": "public"
-  }
-}
+{"name":"@henryqrm/test1","version":"0.0.1","author":{"name":"henryqrm","email":"henryqrm@gmail.com"},"publishConfig":{"access":"public"},"dependencies":{},"devDependencies":{},"peerDependencies":{},"optionalDependencies":{}}
