@@ -10,7 +10,7 @@
         "build": {
           "builder": "@nrwl/web:build",
           "options": {
-            "outputPath": "dist/apps/test",
+            "outputPath": "apps/test/dist",
             "index": "apps/test/src/index.html",
             "main": "apps/test/src/main.tsx",
             "polyfills": "apps/test/src/polyfills.ts",
@@ -125,7 +125,7 @@
         "build": {
           "builder": "@nrwl/web:package",
           "options": {
-            "outputPath": "dist/libs/test1",
+            "outputPath": "libs/test1/dist",
             "tsConfig": "libs/test1/tsconfig.lib.json",
             "project": "libs/test1/package.json",
             "entryFile": "libs/test1/src/index.ts",
@@ -171,7 +171,7 @@
         "build": {
           "builder": "@nrwl/web:package",
           "options": {
-            "outputPath": "dist/libs/test2",
+            "outputPath": "libs/test2/dist",
             "tsConfig": "libs/test2/tsconfig.lib.json",
             "project": "libs/test2/package.json",
             "entryFile": "libs/test2/src/index.ts",
