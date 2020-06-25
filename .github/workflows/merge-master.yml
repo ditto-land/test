@@ -97,12 +97,9 @@ jobs:
       - run: git fetch --no-tags --prune --depth=5 origin master
 
       - name: Setup Node.js with Npm Package Registry
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@master
         with:
           node-version: 12
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          registry-url: 'https://registry.npmjs.org'
-          always-auth: true
 
       - name: Restore dependencies from cache
         uses: actions/cache@v1
