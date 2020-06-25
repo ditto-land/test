@@ -110,7 +110,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Run builders Affected. Run many?
-        run: yarn nx run-many --parallel --maxParallel=5 --target build --with-deps --all
+        run: yarn nx run-many --parallel --maxParallel=5 --target build --with-deps --all --verbose
         # run: yarn affected:build --base=origin/master~1 --prod --with-deps
 
       - name: Run Semantic Release

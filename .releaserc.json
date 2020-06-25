@@ -21,7 +21,7 @@
     [
       "@semantic-release/npm",
       {
-        "tarballDir": "dist",
+        "pkgRoot": "dist",
         "allowSameVersion": true
       }
     ]
