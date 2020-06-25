@@ -2,6 +2,13 @@
   "name": "henryqrm",
   "version": "0.0.0",
   "license": "MIT",
+  "author": {
+    "name": "henryqrm",
+    "email": "henryqrm@gmail.com"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "nx": "nx",
     "start": "nx serve",
@@ -26,7 +33,7 @@
     "help": "nx help",
     "semantic-release": "nx-semantic-release"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "document-register-element": "1.13.1",
     "react": "16.13.1",
