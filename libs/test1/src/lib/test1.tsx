@@ -6,7 +6,6 @@ import './test1.css';
 export interface Test1Props {}
 
 console.log('asdasdas')
-console.log('asdasdas')
 
 export const Test1 = (props: Test1Props) => (
   <div>
