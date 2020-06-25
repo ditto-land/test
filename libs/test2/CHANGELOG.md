@@ -1,3 +1,10 @@
+## @henryqrm/test2 [1.2.0](https://github.com/ditto-land/test/compare/@henryqrm/test2@1.1.0...@henryqrm/test2@1.2.0) (2020-06-25)
+
+
+### Features
+
+* add config ([be07a65](https://github.com/ditto-land/test/commit/be07a6514feed696e43ee1b02126f7dfbabee04d))
+
 ## @henryqrm/test2 [1.1.0](https://github.com/ditto-land/test/compare/@henryqrm/test2@1.0.0...@henryqrm/test2@1.1.0) (2020-06-25)
 
 
