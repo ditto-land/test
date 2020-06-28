@@ -19,7 +19,7 @@
           "package-lock.json",
           "CHANGELOG.md"
         ],
-        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        "message": "chore(${nextRelease.gitTag}): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
     ],
     [
@@ -39,7 +39,14 @@
     [
       "@semantic-release/exec",
       {
-        "successCmd": "echo \"====================== ${nextRelease.name} ${nextRelease.version}\""
+        "verifyConditionsCmd": "echo \"verifyConditionsCmd ====================== \"",
+        "analyzeCommitsCmd": "echo \"analyzeCommitsCmd ====================== \"",
+        "verifyReleaseCmd": "echo \"verifyReleaseCmd ====================== \"",
+        "generateNotesCmd": "echo \"generateNotesCmd ====================== \"",
+        "prepareCmd": "echo \"prepareCmd ====================== \"",
+        "addChannelCmd": "echo \"addChannelCmd ====================== \"",
+        "successCmd": "echo \"successCmd ====================== ${nextRelease.name} ${nextRelease.version}\"",
+        "publishCmd": "echo \"publishCmd ====================== ${nextRelease.name} ${nextRelease.version}\""
       }
     ]
   ],
