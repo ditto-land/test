@@ -25,12 +25,14 @@ jobs:
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install
 
-  sonar:
+  sonarcloud:
       name: Sonar Scan
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2
-        - name: Scan
+          with:
+            fetch-depth: 0
+        - name: SonarCloud Scan
           uses: sonarsource/sonarcloud-github-action@master
           env:
             GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
