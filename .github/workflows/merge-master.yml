@@ -26,9 +26,9 @@ jobs:
         run: yarn install
 
   sonar:
+    name: Sonar Scan
     runs-on: ubuntu-latest
     steps:
-      - name: Sonar Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
