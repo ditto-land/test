@@ -35,6 +35,12 @@
         "tarballDir": "dist",
         "allowSameVersion": true
       }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "successCmd": "echo \"====================== ${nextRelease.name} ${nextRelease.version}\""
+      }
     ]
   ],
   "preset": "conventionalcommits"

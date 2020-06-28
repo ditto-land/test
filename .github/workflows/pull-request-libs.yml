@@ -1,8 +1,11 @@
-name: Merge on master & Publish
+name: Pull Request on master
 
 on:
-  push:
-    branches: [master, next]
+  pull_request:
+    paths: 'libs/**'
+    branches:
+      - master
+    types: [opened, reopened, synchronize]
 
 jobs:
   dependencies:
@@ -38,6 +41,33 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+  build:
+    name: Build applications & libraries
+    runs-on: ubuntu-latest
+    needs: [dependencies]
+    steps:
+      - uses: actions/checkout@master
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - run: git fetch --no-tags --prune --depth=5 origin master
+
+      - uses: actions/setup-node@master
+        with:
+          node-version: 12
+
+      - name: Restore dependencies from cache
+        uses: actions/cache@master
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Run builders
+        run: yarn affected:build --base=origin/master --head=${{ github.event.pull_request.head.ref }} --prod --with-deps
+
   lint:
     name: Linter
     runs-on: ubuntu-latest
@@ -45,7 +75,8 @@ jobs:
     steps:
       - uses: actions/checkout@master
         with:
-          ref: master
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
 
       - run: git fetch --no-tags --prune --depth=5 origin master
 
@@ -62,7 +93,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Run linting
-        run: yarn affected:lint --base=origin/master~1
+        run: yarn affected:lint --base=origin/master --head=${{ github.event.pull_request.head.ref }}
 
   test:
     name: Test applications & libraries
@@ -71,7 +102,8 @@ jobs:
     steps:
       - uses: actions/checkout@master
         with:
-          ref: master
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
 
       - run: git fetch --no-tags --prune --depth=5 origin master
 
@@ -88,82 +120,4 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Run tests
-        run: yarn affected:test --base=origin/master~1
-
-  publish:
-    if: "!contains(github.event.head_commit.message, 'skip ci')"
-    name: Publish
-    runs-on: ubuntu-latest
-    needs: [test, lint]
-    steps:
-      - uses: actions/checkout@master
-        with:
-          ref: master
-
-      - run: git fetch --no-tags --prune --depth=5 origin master
-
-      - name: Setup Node.js with Npm Package Registry
-        uses: actions/setup-node@master
-        with:
-          node-version: 12
-
-      - name: Restore dependencies from cache
-        uses: actions/cache@master
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - name: Run builders Affected. Run many?
-        run: yarn nx run-many --parallel --maxParallel=5 --target build --with-deps --all --verbose
-        # run: yarn affected:build --base=origin/master~1 --prod --with-deps
-
-      - name: Run Semantic Release
-        run: yarn semantic-release
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-
-      # - name: Deploy
-      #   shell: bash
-      #   env:
-      #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      #   run: |
-      #     export AFFECTED=$(node node_modules/.bin/nx affected:libs --plain --base=origin/master~1)
-      #     export ROOT_DIR="$PWD"
-      #     if [[ "$AFFECTED" != "" ]]; then
-      #       while IFS= read -r -d $' ' lib; do
-
-      #         npm publish "$ROOT_DIR/dist/libs/${lib/-//}" --access=public
-
-      #         wait
-      #       done <<<"$AFFECTED "
-      #     else
-      #       echo "No Libraries to publish"
-      #     fi
-
-      # - name: Setup Node.js with GitHub Package Registry
-      #   uses: actions/setup-node@master
-      #   with:
-      #     node-version: 12
-      #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      #     registry-url: 'https://npm.pkg.github.com'
-      #     scope: 'henryqrm'
-
-      # - name: Publish To GitHub Package Registry
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      #   run: |
-      #     export AFFECTED=$(node node_modules/.bin/nx affected:libs --plain --base=origin/master~1)
-      #     export ROOT_DIR="$PWD"
-      #     if [[ "$AFFECTED" != "" ]]; then
-      #       while IFS= read -r -d $' ' lib; do
-
-      #         npm publish "$ROOT_DIR/dist/libs/${lib/-//}"
-
-      #         wait
-      #       done <<<"$AFFECTED "
-      #     else
-      #       echo "No Libraries to publish"
-      #     fi
+        run: yarn affected:test --base=origin/master --head=${{ github.event.pull_request.head.ref }}
