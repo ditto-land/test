@@ -2,28 +2,21 @@ name: Merge on master & Publish
 
 on:
   push:
-    # paths: 'libs/**'
     branches: [master, next]
-  # pull_request:
-  # build only change libs folder
-  # paths: 'libs/**'
-  # branches:
-  #   - master
-  # types: [closed]
 
 jobs:
   dependencies:
     name: Cache dependencies
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
         with:
           node-version: 12
-      - uses: actions/cache@v1
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+      - uses: actions/cache@master
+        id: yarn-cache
         with:
-          path: node_modules # !WARN does not work if running multiple node versions, instead use https://github.com/actions/cache/blob/master/examples.md#node---yarn
+          path: node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
@@ -37,18 +30,18 @@ jobs:
     runs-on: ubuntu-latest
     needs: [dependencies]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@master
         with:
           ref: master
 
       - run: git fetch --no-tags --prune --depth=5 origin master
 
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@master
         with:
           node-version: 12
 
       - name: Restore dependencies from cache
-        uses: actions/cache@v1
+        uses: actions/cache@master
         with:
           path: node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -63,18 +56,18 @@ jobs:
     runs-on: ubuntu-latest
     needs: [dependencies]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@master
         with:
           ref: master
 
       - run: git fetch --no-tags --prune --depth=5 origin master
 
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@master
         with:
           node-version: 12
 
       - name: Restore dependencies from cache
-        uses: actions/cache@v1
+        uses: actions/cache@master
         with:
           path: node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -90,7 +83,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test, lint]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@master
         with:
           ref: master
 
@@ -102,7 +95,7 @@ jobs:
           node-version: 12
 
       - name: Restore dependencies from cache
-        uses: actions/cache@v1
+        uses: actions/cache@master
         with:
           path: node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -138,7 +131,7 @@ jobs:
       #     fi
 
       # - name: Setup Node.js with GitHub Package Registry
-      #   uses: actions/setup-node@v1
+      #   uses: actions/setup-node@master
       #   with:
       #     node-version: 12
       #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
