@@ -10,8 +10,6 @@ export const Test2 = (props: Test2Props) => {
     <div>
     <div>asdasd</div>
       <div>asdasd</div>
-      <div>asdasd</div>
-      <div>asdasd</div>
       <h1>Welcome!</h1>
     </div>
   );
