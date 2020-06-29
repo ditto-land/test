@@ -1,3 +1,10 @@
+## @henryqrm/test2 [1.5.0](https://github.com/ditto-land/test/compare/@henryqrm/test2@1.4.0...@henryqrm/test2@1.5.0) (2020-06-29)
+
+
+### Features
+
+* asdasd asdasd ([15da558](https://github.com/ditto-land/test/commit/15da5586e9f67745e7178b07ec8a450f8e6b2c58))
+
 ## @henryqrm/test2 [1.4.0](https://github.com/ditto-land/test/compare/@henryqrm/test2@1.3.0...@henryqrm/test2@1.4.0) (2020-06-28)
 
 
