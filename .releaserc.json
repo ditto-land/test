@@ -45,6 +45,12 @@
     [
       "@semantic-release/exec",
       {
+        "successCmd": "cat .npmrc"
+      }
+    ],
+    [
+      "@semantic-release/exec",
+      {
         "successCmd": "npm publish --@henryqrm:registry='https://npm.pkg.github.com' --access=public"
       }
     ]
