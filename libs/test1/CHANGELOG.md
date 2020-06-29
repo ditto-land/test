@@ -1,3 +1,11 @@
+## @henryqrm/test1 [1.12.0](https://github.com/ditto-land/test/compare/@henryqrm/test1@1.11.0...@henryqrm/test1@1.12.0) (2020-06-29)
+
+
+### Features
+
+* erwrewrewr hgjg ([4f9c7d2](https://github.com/ditto-land/test/commit/4f9c7d2af89d002cd34691bebc20637effa7086f))
+* hkjhkjhkj ([bb914a0](https://github.com/ditto-land/test/commit/bb914a094a17b91c5df3a69c8f933b8a195a10f6))
+
 ## @henryqrm/test1 [1.11.0](https://github.com/ditto-land/test/compare/@henryqrm/test1@1.10.0...@henryqrm/test1@1.11.0) (2020-06-29)
 
 
