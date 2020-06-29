@@ -1,3 +1,16 @@
+## @henryqrm/test1 [1.9.0](https://github.com/ditto-land/test/compare/@henryqrm/test1@1.8.0...@henryqrm/test1@1.9.0) (2020-06-29)
+
+
+### Features
+
+* asdasd asdasdas ([f958a95](https://github.com/ditto-land/test/commit/f958a95653e99ac6d05b5d8c59d9fb03fee55349))
+* asdasdsd asda ([04c8982](https://github.com/ditto-land/test/commit/04c89826a5b1c6a69d5657a92919095027c817fb))
+
+
+### Bug Fixes
+
+* asdasd ([a836001](https://github.com/ditto-land/test/commit/a8360014b964c75bb2b297786ee0b7cbf87a4cdc))
+
 ## @henryqrm/test1 [1.8.0](https://github.com/ditto-land/test/compare/@henryqrm/test1@1.7.0...@henryqrm/test1@1.8.0) (2020-06-29)
 
 
