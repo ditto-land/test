@@ -8,7 +8,6 @@ export interface Test1Props {}
 export const Test1 = (props: Test1Props) => (
   <div>
 
-
   <div>asdasds</div>
   
   </div>
