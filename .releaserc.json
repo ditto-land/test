@@ -39,12 +39,6 @@
     [
       "@semantic-release/exec",
       {
-        "verifyConditionsCmd": "echo \"verifyConditionsCmd ====================== \"",
-        "analyzeCommitsCmd": "echo \"analyzeCommitsCmd ====================== \"",
-        "verifyReleaseCmd": "echo \"verifyReleaseCmd ====================== \"",
-        "generateNotesCmd": "echo \"generateNotesCmd ====================== \"",
-        "prepareCmd": "echo \"prepareCmd ====================== \"",
-        "addChannelCmd": "echo \"addChannelCmd ====================== \"",
         "successCmd": "echo \"successCmd ====================== ${nextRelease.name} ${nextRelease.version}\"",
         "publishCmd": "echo \"publishCmd ====================== ${nextRelease.name} ${nextRelease.version}\""
       }
