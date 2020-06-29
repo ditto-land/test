@@ -19,7 +19,7 @@
           "package-lock.json",
           "CHANGELOG.md"
         ],
-        "message": "chore(${nextRelease.gitTag}): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        "message": "chore(release): ${nextRelease.gitTag} [skip ci]\n\n${nextRelease.notes}"
       }
     ],
     [
@@ -39,8 +39,7 @@
     [
       "@semantic-release/exec",
       {
-        "successCmd": "echo \"successCmd ====================== ${nextRelease.name} ${nextRelease.version}\"",
-        "publishCmd": "echo \"publishCmd ====================== ${nextRelease.name} ${nextRelease.version}\""
+        "successCmd": "echo \"//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}\" > .npmrc && npm publish --@henryqrm:registry='https://npm.pkg.github.com' --access=public"
       }
     ]
   ],
